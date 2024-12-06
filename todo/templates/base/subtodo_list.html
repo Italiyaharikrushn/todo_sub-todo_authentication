@@ -1,0 +1,27 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/subtasks_list.css' %}">
+    <title>Subtasks List</title>
+</head>
+<body>
+    <h1>Subtasks</h1>
+    <ul>
+        {% for subtodo in subtodos %}
+        <li>
+            <h2>{{ subtodo.title }}</h2>
+            <p>{{ subtodo.desc }}</p>
+            <p>Status: {{ subtodo.status }}</p>
+            {% if subtodo.completion_date %}
+            <p>Completion Date: {{ subtodo.completion_date }}</p>
+            {% endif %}
+        </li>
+        {% empty %}
+        <li>No subtasks found.</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
