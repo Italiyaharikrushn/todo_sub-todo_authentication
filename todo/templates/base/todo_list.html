@@ -18,14 +18,14 @@
 <body>
     <div class="to-do-list">
 
-        <!-- Header Section -->
+        <!-- Section: Header -->
         <section>
             <div class="container text-center">
                 <h3 class="text-5xl mt-4">To-Do List</h3>
             </div>
         </section>
 
-        <!-- Add Task Section -->
+        <!-- Section: Add Task -->
         <section>
             <div class="container text-center mt-4">
                 <form id="todo-form" action="{% url 'add' %}">
@@ -34,7 +34,7 @@
             </div>
         </section>
 
-        <!-- Logout Section -->
+        <!-- Section: Logout -->
         <section>
             <div class="container text-center mt-4">
                 <form id="logout-form" action="{% url 'logout' %}">
@@ -43,7 +43,7 @@
             </div>
         </section>
 
-        <!-- Task List Section -->
+        <!-- Section: Task List -->
         <section>
             <div class="container mt-4">
                 {% for i in todos %}
