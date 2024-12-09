@@ -65,15 +65,25 @@ def logout(request):
 
 # This function displays the to-do list for the logged-in user
 def todo_list(request):
+    # Redirect to login page if user is not logged in
     if 'user_id' not in request.session:
         return redirect('login')
 
     user_id = request.session['user_id']
     todos = Todo.objects.filter(user_id=user_id)
 
+    # Fetch the user and their name
+    try:
+        user = User.objects.get(id=user_id)
+        name = user.name  # Use the user object for fetching the name
+    except User.DoesNotExist:
+        return redirect('login')  # Handle invalid user case
+
+    # Add the subtask count for each todo
     for todo in todos:
         todo.subtodo_count = SubTodo.objects.filter(todo_id=todo.id).count()
-    return render(request, 'base/todo_list.html', {'todos': todos})
+
+    return render(request, 'base/todo_list.html', {'todos': todos, 'name': name})
 
 # This function handles adding a new task for the logged-in user
 def addTask(request):

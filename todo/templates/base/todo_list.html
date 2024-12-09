@@ -25,7 +25,7 @@
             </div>
         </section>
 
-        <!-- Section: Header -->
+        <!-- Section: Title -->
         <section>
             <div class="container text-center">
                 <h3 class="text-5xl mt-4">To-Do List</h3>
@@ -36,7 +36,7 @@
         <section>
             <div class="container text-center mt-4">
                 <form id="todo-form" action="{% url 'add' %}">
-                    <button id="addlist">Add Your Task</button>
+                    <button id="addlist" class="btn btn-primary">Add Your Task</button>
                 </form>
             </div>
         </section>
@@ -45,7 +45,7 @@
         <section>
             <div class="container text-center mt-4">
                 <form id="logout-form" action="{% url 'logout' %}">
-                    <button id="logout-button">Logout</button>
+                    <button id="logout-button" class="btn btn-danger">Logout</button>
                 </form>
             </div>
         </section>
@@ -74,25 +74,20 @@
                                     <td class="label">Completion Date</td>
                                     <td class="value">{{ i.completion_date }}</td>
                                 </tr>
-
                                 <tr>
-                                    <td class="label">Total SubTasks: </td>
+                                    <td class="label">Total SubTasks</td>
                                     <td class="value">{{ i.subtodo_count }}</td>
                                 </tr>
-
                                 <tr>
                                     <td colspan="2" class="text-center">
-                                        <a href="{% url 'delete_task' i.id %}">
-                                            <i class="fa-solid fa-trash m-2 text-danger"></i>
+                                        <a href="{% url 'delete_task' i.id %}" class="text-danger">
+                                            <i class="fa-solid fa-trash m-2"></i>
                                         </a>
-                                        <a href="{% url 'edit_task' i.id %}">
-                                            <i class="fa-regular fa-pen-to-square m-2 text-success"></i>
+                                        <a href="{% url 'edit_task' i.id %}" class="text-success">
+                                            <i class="fa-regular fa-pen-to-square m-2"></i>
                                         </a>
-                                        <!-- <a href="{% url 'addSubTask' i.id %}">
-                                            <i class="fa fa-plus fa-pen-to-square m-2 text-primary"></i>
-                                        </a> -->
-                                        <a href="{% url 'subtodo_list' i.id %}">
-                                            <i class="fa fa-eye" aria-hidden="true"></i>
+                                        <a href="{% url 'subtodo_list' i.id %}" class="text-primary">
+                                            <i class="fa fa-eye"></i>
                                         </a>
                                     </td>
                                 </tr>
@@ -100,6 +95,8 @@
                         </div>
                     </div>
                 </div>
+                {% empty %}
+                <p class="text-center mt-4">No tasks found. Add a new task!</p>
                 {% endfor %}
             </div>
         </section>
