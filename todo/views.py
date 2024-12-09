@@ -9,7 +9,6 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.hashers import make_password, check_password
 from .models import User, Todo, SubTodo
-from django.contrib.auth.models import User
 
 def register(request):
     if request.method == 'POST':
@@ -72,18 +71,9 @@ def todo_list(request):
     user_id = request.session['user_id']
     todos = Todo.objects.filter(user_id=user_id)
 
-    # Fetch the user and their name
-    try:
-        user = User.objects.get(id=user_id)
-        user_name = user.first_name or user.username  # Display first name if available, else username
-    except User.DoesNotExist:
-        user_name = "User"
-
-    # Add the subtask count for each todo
     for todo in todos:
         todo.subtodo_count = SubTodo.objects.filter(todo_id=todo.id).count()
-
-    return render(request, 'base/todo_list.html', {'todos': todos, 'name': user_name})
+    return render(request, 'base/todo_list.html', {'todos': todos})
 
 # This function handles adding a new task for the logged-in user
 def addTask(request):
