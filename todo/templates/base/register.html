@@ -1,0 +1,106 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/register.css' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <title>Register</title>
+</head>
+
+<body>
+    <!-- Section: Header for Registration Page -->
+    <header class="my-4">
+        <h2>Registration Form</h2>
+    </header>
+
+    <!-- Section: Registration Form -->
+    <section>
+        <div class="container">
+            <div class="row box">
+                <div class="col-12 col-md-6">
+                    <form method="POST" class="p-4">
+                        {% csrf_token %}
+
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Name:</label>
+                            <input type="text" id="name" name="name" placeholder="Enter Name" class="form-control"
+                                value="{{ name|default:'' }}" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email:</label>
+                            <input type="email" id="email" name="email" placeholder="Enter Email" class="form-control"
+                                required>
+                            <!-- Display email error message -->
+                            {% for message in messages %}
+                                {% if 'email' in message %}
+                                    <div class="text-danger mt-1">{{ message }}</div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="phone" class="form-label">Phone:</label>
+                            <input type="text" id="phone" name="phone" maxlength="14" class="form-control"
+                                value="{{ phone|default:'+91-' }}" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password:</label>
+                            <input type="password" id="password" name="password" placeholder="Enter Password"
+                                class="form-control" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="gender" class="form-label">Gender:</label>
+                            <select id="gender" name="gender" class="form-select">
+                                <option value="Select" disabled selected>Select</option>
+                                <option value="Male" {% if gender == "Male" %}selected{% endif %}>Male</option>
+                                <option value="Female" {% if gender == "Female" %}selected{% endif %}>Female</option>
+                                <option value="Other" {% if gender == "Other" %}selected{% endif %}>Other</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="age" class="form-label">Age:</label>
+                            <input type="number" id="age" name="age" placeholder="Enter Age" class="form-control"
+                                value="{{ age|default:'' }}" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="profession" class="form-label">Profession:</label>
+                            <input type="text" id="profession" name="profession" placeholder="Enter Profession"
+                                class="form-control" value="{{ profession|default:'' }}" required>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100">Register</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section: Login Link -->
+    <section>
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="log">
+                        <p>Already have an account? <a href="{% url 'login' %}">Login here</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-pzjw8f+ua7Kw1TIq0m3p3tbPpveKjHrpbbT3NxAYfg/cf6jaX22tWjWm6p6p6l9H"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

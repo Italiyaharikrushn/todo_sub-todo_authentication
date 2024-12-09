@@ -1,0 +1,66 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.to-do-list {
+    min-height: 100vh;
+    padding: 20px;
+    background-color: #f8f9fa;
+}
+
+h3 {
+    font-family: "Nunito", sans-serif;
+    font-size: 2rem;
+    color: #333;
+}
+
+.todo-form-container {
+    text-align: center;
+}
+
+.todo-form {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.todo-form input[type="text"],
+.todo-form textarea,
+.todo-form select,
+.todo-form input[type="date"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    font-family: "Nunito", sans-serif;
+}
+
+.todo-form button {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.todo-form button:hover {
+    background-color: #218838;
+}
+
+.container .btn-primary {
+    padding: 10px 20px;
+    font-size: 16px;
+    text-transform: uppercase;
+}

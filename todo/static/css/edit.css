@@ -1,0 +1,102 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body Styling */
+body {
+    font-family: "Nunito", sans-serif;
+    background-color: #f7f8fc;
+    color: #333;
+}
+
+/* Page Title */
+h1 {
+    font-size: 2.5rem;
+    color: #28a745;
+}
+
+/* Form Styling */
+.todo-form {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+}
+
+.todo-form input[type="text"],
+.todo-form textarea,
+.todo-form select,
+.todo-form input[type="date"] {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+.todo-form textarea {
+    resize: vertical;
+    height: 100px;
+}
+
+.todo-form button {
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: background-color 0.3s ease;
+    width: 100%;
+}
+
+.todo-form button:hover {
+    background-color: #218838;
+}
+
+/* Input Focus */
+.todo-form input:focus,
+.todo-form textarea:focus,
+.todo-form select:focus,
+.todo-form input[type="date"]:focus {
+    border-color: #28a745;
+    outline: none;
+}
+
+/* Completion Date Field */
+#completion-date-field {
+    margin-top: 15px;
+}
+
+/* Back Button */
+form button.btn-secondary {
+    width: 150px;
+    font-size: 1rem;
+    padding: 10px;
+    border: 1px solid #6c757d;
+    background-color: #6c757d;
+    color: white;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+form button.btn-secondary:hover {
+    background-color: #5a6268;
+}
+
+/* Status Dropdown */
+select {
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'%3E%3Cpath fill='%23999' d='M2 0L0 2h4zm0 5L0 3h4z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 10px;
+}

@@ -1,0 +1,75 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+.to-do-list {
+    min-height: 100vh;
+}
+
+h3 {
+    text-align: center;
+    font-weight: bold;
+}
+
+#addlist,
+#logout-button {
+    width: 200px;
+    padding: 12px;
+    font-family: "Nunito", sans-serif;
+    font-size: 15px;
+    color: white;
+    background-color: #025d02;
+    border: none;
+    border-radius: 6px;
+    transition: background-color 0.3s;
+}
+
+#addlist:hover,
+#logout-button:hover {
+    background-color: #004900;
+}
+
+.styled-div {
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+}
+
+.styled-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.styled-table td {
+    padding: 12px;
+    vertical-align: top;
+    color: #555;
+}
+
+.styled-table .label {
+    font-weight: bold;
+    color: #333;
+}
+
+.styled-table tr:nth-child(even) {
+    background-color: #f0f0f0;
+}
+
+.styled-table tr:hover {
+    background-color: #e0e0e0;
+}
+
+.styled-table td .fa-trash {
+    color: #e61429;
+    cursor: pointer;
+}
+
+.styled-table td .fa-pen-to-square {
+    color: #1f9707;
+    cursor: pointer;
+}
