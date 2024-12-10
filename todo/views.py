@@ -26,7 +26,6 @@ def register(request):
 
     return render(request, 'base/register.html')
 
-
 # This function handles the user login process
 def login(request):
     if request.method == 'POST':
