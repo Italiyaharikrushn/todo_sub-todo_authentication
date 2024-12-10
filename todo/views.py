@@ -32,12 +32,6 @@ def login(request):
         email = request.POST['email']
         password = request.POST['password']
 
-        # user = User.objects.get(email=email)
-        # if check_password(password, user.password):
-        #     request.session['user_id'] = user.id
-        #     request.session['user_name'] = user.name
-        #     return redirect('todo_list')
-
         try:
             user = User.objects.get(email=email)
             if check_password(password, user.password):
