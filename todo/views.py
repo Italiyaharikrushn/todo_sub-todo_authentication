@@ -174,7 +174,7 @@ def subtodo_list_and_add(request, todo_id):
         )
         return redirect('subtodo_list', todo_id=todo_id)
 
-    return render(request, 'base/subtodo_list.html', {'subtodos': subtodos, 'todo_id': todo_id, 'title': todo.title, 'form': form })
+    return render(request, 'base/subtodo_list.html', {'subtodos': subtodos, 'todo_id': todo_id, 'title': todo.title, 'form': form,})
 
 # This function handles editing an existing sub-task
 def editSubTask(request, todo_id):
