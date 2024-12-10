@@ -147,7 +147,7 @@ def editTask(request, id):
 def subtodo_list_and_add(request, todo_id):
     todo = Todo.objects.get(id=todo_id)
     subtodos = SubTodo.objects.filter(todo_id=todo_id)
-    show_form = request.GET.get('add', False)
+    form = request.GET.get('add', False)
 
     if request.method == 'POST':
         title = request.POST.get('title')
@@ -162,7 +162,7 @@ def subtodo_list_and_add(request, todo_id):
                 'subtodos': subtodos,
                 'todo_id': todo_id,
                 'title': todo.title,
-                'show_form': show_form
+                'form': form
             })
 
         SubTodo.objects.create(
@@ -174,7 +174,7 @@ def subtodo_list_and_add(request, todo_id):
         )
         return redirect('subtodo_list', todo_id=todo_id)
 
-    return render(request, 'base/subtodo_list.html', {'subtodos': subtodos, 'todo_id': todo_id, 'title': todo.title, 'show_form': show_form,})
+    return render(request, 'base/subtodo_list.html', {'subtodos': subtodos, 'todo_id': todo_id, 'title': todo.title, 'form': form })
 
 # This function handles editing an existing sub-task
 def editSubTask(request, todo_id):
@@ -214,4 +214,4 @@ def deleteSubtask(request, todo_id):
             return redirect('todo_list')
         return redirect('todo_list')
 
-    return render(request, 'base/delete_subtodo.html', {'item': item})
+    return render(request, 'base/delete_todo.html', {'item': item})
