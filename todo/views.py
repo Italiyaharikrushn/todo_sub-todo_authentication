@@ -146,8 +146,15 @@ def editTask(request, id):
 # This function displays the sub-to-do list for the to-do
 def subtodo_list(request, todo_id):
     subtodos = SubTodo.objects.filter(todo_id=todo_id)
+    # try:
+    todo = Todo.objects.get(id=todo_id)
+    context = {
+        'subtodos': subtodos,
+        'todo_id': todo_id,
+        'title': todo.title,
+    }
 
-    return render(request, 'base/subtodo_list.html', {'subtodos': subtodos, 'todo_id': todo_id})
+    return render(request, 'base/subtodo_list.html', context)
 
 # This function handles adding a new sub-task for the to-do
 def addSubTask(request, todo_id):

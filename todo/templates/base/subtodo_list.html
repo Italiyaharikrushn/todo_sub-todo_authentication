@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>To-Do List</title>
+    <title>{{ title }} - Sub-Tasks</title>
     <link rel="stylesheet" href="{% static 'css/todo_list.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -15,6 +15,14 @@
 
 <body>
     <div class="to-do-list">
+
+        <!-- Section: Header -->
+        <section class="text-center">
+            <div class="container">
+                <h1>{{ title }}</h1>
+            </div>
+        </section>
+
         <!-- Section: Header -->
         <section>
             <div class="container text-center">
