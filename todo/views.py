@@ -143,41 +143,38 @@ def editTask(request, id):
 
     return render(request, 'base/edit_todo.html', {'task': task})
 
-# This function displays the sub-to-do list for the to-do
-def subtodo_list(request, todo_id):
-    subtodos = SubTodo.objects.filter(todo_id=todo_id)
-    # try:
-    todo = Todo.objects.get(id=todo_id)
-    context = {
-        'subtodos': subtodos,
-        'todo_id': todo_id,
-        'title': todo.title,
-    }
-
-    return render(request, 'base/subtodo_list.html', context)
-
 # This function handles adding a new sub-task for the to-do
-def addSubTask(request, todo_id):
+def subtodo_list_and_add(request, todo_id):
+    todo = Todo.objects.get(id=todo_id)
+    subtodos = SubTodo.objects.filter(todo_id=todo_id)
+    show_form = request.GET.get('add', False)
+
     if request.method == 'POST':
         title = request.POST.get('title')
         desc = request.POST.get('desc')
         status = request.POST.get('status')
         completion_date = request.POST.get('completion_date') if status == 'Complete' else None
         dropdown_submit = request.POST.get('dropdown_submit', False)
+        
         if dropdown_submit:
-            return render(request, 'base/add_subtodo.html', {
-                'task': {'title': title, 'desc': desc, 'status': status, 'completion_date': completion_date}
+            return render(request, 'base/subtodo_list.html', {
+                'task': {'title': title, 'desc': desc, 'status': status, 'completion_date': completion_date},
+                'subtodos': subtodos,
+                'todo_id': todo_id,
+                'title': todo.title,
+                'show_form': show_form
             })
-        if SubTodo.objects.filter(title=title, todo_id=todo_id).exists():
-            return redirect('addSubTask')
 
         SubTodo.objects.create(
-            title=title, desc=desc, status=status,
-            completion_date=completion_date, todo_id=todo_id
+            title=title,
+            desc=desc,
+            status=status,
+            completion_date=completion_date,
+            todo_id=todo_id,
         )
-        return redirect('todo_list')
+        return redirect('subtodo_list', todo_id=todo_id)
 
-    return render(request, 'base/add_subtodo.html')
+    return render(request, 'base/subtodo_list.html', {'subtodos': subtodos, 'todo_id': todo_id, 'title': todo.title, 'show_form': show_form,})
 
 # This function handles editing an existing sub-task
 def editSubTask(request, todo_id):

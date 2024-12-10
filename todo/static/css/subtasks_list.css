@@ -1,74 +1,119 @@
-/* General styles */
+/* General Styles */
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f9f9f9;
+    font-family: 'Arial', sans-serif;
+    background-color: #f8f9fa;
     margin: 0;
     padding: 0;
-    color: #333;
-    line-height: 1.6;
 }
 
-/* Page header */
+/* Container for To-Do List */
+.to-do-list {
+    margin-top: 20px;
+}
+
+/* Header Section */
 h1 {
-    text-align: center;
-    color: #4CAF50;
-    margin: 20px 0;
+    font-size: 2.5rem;
+    color: #343a40;
+    margin-top: 20px;
 }
 
-/* Add Subtask link */
-a {
-    display: block;
-    text-align: center;
-    margin: 20px auto;
-    max-width: 200px;
-    padding: 10px;
-    background-color: #4CAF50;
-    color: white;
-    text-decoration: none;
-    border-radius: 5px;
-    font-weight: bold;
-    transition: background-color 0.3s ease;
-}
-
-a:hover {
-    background-color: #45a049;
-}
-
-/* Subtask list container */
-ul {
-    max-width: 800px;
-    margin: 20px auto;
-    padding: 0;
-    list-style: none;
-}
-
-/* Individual subtask item */
-li {
-    background: #fff;
-    margin-bottom: 15px;
-    padding: 15px;
-    border-radius: 5px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    border: 1px solid #ddd;
-}
-
-/* Subtask title */
-h2 {
-    margin: 0 0 10px;
-    color: #333;
-    font-size: 1.5rem;
-}
-
-/* Subtask description and other details */
-p {
-    margin: 5px 0;
-    color: #555;
+/* Add Task and View Subtasks Buttons */
+.btn {
     font-size: 1rem;
+    padding: 10px 20px;
+    margin: 5px;
 }
 
-/* No subtasks found message */
-li:empty {
+.btn-success {
+    background-color: #28a745;
+    border-color: #28a745;
+}
+
+.btn-success:hover {
+    background-color: #218838;
+    border-color: #1e7e34;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+.btn-primary:hover {
+    background-color: #0069d9;
+    border-color: #0062cc;
+}
+
+/* Task Form */
+.todo-form-container {
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.todo-form input,
+.todo-form textarea,
+.todo-form select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+.todo-form input:focus,
+.todo-form textarea:focus,
+.todo-form select:focus {
+    outline-color: #28a745;
+    border-color: #28a745;
+}
+
+/* Table Styles */
+.table {
+    background-color: #ffffff;
+    border: 1px solid #dee2e6;
+}
+
+.table th {
+    background-color: #343a40;
+    color: white;
+}
+
+.table td {
+    vertical-align: middle;
+}
+
+.table td a {
+    text-decoration: none;
+}
+
+.table td a:hover {
+    color: #28a745;
+}
+
+.table-dark {
+    background-color: #343a40;
+}
+
+.table-hover tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* Task Completion Date Field */
+#completion-date-field {
+    margin-top: 15px;
+}
+
+/* Footer Section */
+footer {
+    background-color: #343a40;
+    color: white;
+    padding: 20px 0;
     text-align: center;
-    color: #777;
-    font-style: italic;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
 }

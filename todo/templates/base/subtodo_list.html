@@ -6,7 +6,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ title }} - Sub-Tasks</title>
-    <link rel="stylesheet" href="{% static 'css/todo_list.css' %}">
+    <!-- Static CSS -->
+    <link rel="stylesheet" href="{% static 'css/subtasks_list.css' %}">
+    <!-- External Libraries -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
@@ -15,11 +17,10 @@
 
 <body>
     <div class="to-do-list">
-
-        <!-- Section: Header -->
+        <!-- Header Section -->
         <section class="text-center">
             <div class="container">
-                <h1 class="mt-2">{{ title }}</h1>
+                <h1 class="text-4xl mt-2">{{ title }}</h1>
             </div>
         </section>
 
@@ -30,72 +31,110 @@
             </div>
         </section>
 
-        <!-- Section: Add Task -->
+        <!-- Add Task and View Subtasks Buttons -->
         <section>
             <div class="container text-center mt-4">
-                <form id="todo-form" action="{% url 'addSubTask' todo_id %}">
-                    <button id="addlist">Add Your Sub-Task</button>
-                </form>
+                <a href="?add=true" class="btn btn-success">Add Sub-Task</a>
+                <a href="{% url 'subtodo_list' todo_id %}" class="btn btn-primary">View Sub-Tasks</a>
             </div>
         </section>
 
-        <!-- Section: Sub Task List -->
-        <section>
-            <div class="container mt-4">
-                <div class="row justify-content-center">
-                    <div class="col-md-8">
-                        <div class="card mb-3">
-                            <div class="card-body">
-                                <table class="table table-bordered table-hover">
-                                    <thead class="table-dark">
-                                        <tr>
-                                            <th>Task</th>
-                                            <th>Description</th>
-                                            <th>Status</th>
-                                            <th>Completion Date</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {% for i in subtodos %}
-                                        <tr>
-                                            <td>{{ i.title }}</td>
-                                            <td>{{ i.desc }}</td>
-                                            <td>{{ i.status }}</td>
-                                            <td>{{ i.completion_date }}</td>
-                                            <td class="text-center">
-                                                <a href="{% url 'deleteSubtask' i.id %}" class="text-danger me-2">
-                                                    <i class="fa-solid fa-trash"></i>
-                                                </a>
-                                                <a href="{% url 'sub_edit' i.id %}" class="text-success">
-                                                    <i class="fa-regular fa-pen-to-square"></i>
-                                                </a>
-                                            </td>
-                                        </tr>
-                                        {% endfor %}
-                                    </tbody>
-                                </table>
-                            </div>
+        <!-- Add Task Form Section -->
+        {% if show_form %}
+        <section class="mt-5">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="todo-form-container">
+                            <form id="todo-form" method="post" class="todo-form">
+                                {% csrf_token %}
+                                <input type="text" name="title" id="todotext" placeholder="Add a Task." 
+                                    value="{{ task.title }}" required />
+                                <textarea name="desc" id="tododesc" placeholder="Task Description" required>{{ task.desc }}</textarea>
+                                
+                                <label for="todostatus">Status:</label>
+                                <select name="status" id="todostatus" required>
+                                    <option value="Incomplete" {% if task.status == "Incomplete" %}selected{% endif %}>Incomplete</option>
+                                    <option value="Complete" {% if task.status == "Complete" %}selected{% endif %}>Complete</option>
+                                </select>
+
+                                {% if task.status == 'Complete' %}
+                                <div id="completion-date-field">
+                                    <label for="tododate">Completion Date:</label>
+                                    <input type="date" id="tododate" name="completion_date" 
+                                        value="{{ task.completion_date }}" required />
+                                </div>
+                                {% endif %}
+
+                                <button type="submit" class="btn btn-success">Add Task</button>
+                            </form>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
+        {% endif %}
 
-        <!-- Section: Back to Task Button -->
+        <!-- Sub Task List Section -->
         <section>
-            <div class="container">
-                <div class="row text-center">
-                    <div class="col-12">
-                        <a href="{% url 'todo_list' %}" class="btn btn-primary">Back to Task</a>
-                    </div>
-                </div>
+            <div class="container mt-4">
+                <table class="table table-bordered table-hover">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Task</th>
+                            <th>Description</th>
+                            <th>Status</th>
+                            <th>Completion Date</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for i in subtodos %}
+                        <tr>
+                            <td>{{ i.title }}</td>
+                            <td>{{ i.desc }}</td>
+                            <td>{{ i.status }}</td>
+                            <td>{{ i.completion_date }}</td>
+                            <td>
+                                <a href="{% url 'deleteSubtask' i.id %}" class="text-danger me-2">
+                                    <i class="fa-solid fa-trash"></i>
+                                </a>
+                                <a href="{% url 'sub_edit' i.id %}" class="text-success">
+                                    <i class="fa-regular fa-pen-to-square"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Back to Task Button -->
+        <section>
+            <div class="container text-center mt-4">
+                <a href="{% url 'todo_list' %}" class="btn btn-primary">Back to Task</a>
             </div>
         </section>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-        crossorigin="anonymous"></script>
+    <!-- Bootstrap Script -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const statusSelect = document.getElementById('todostatus');
+            const todoForm = document.getElementById('todo-form');
+            
+            statusSelect.addEventListener('change', () => {
+                const hiddenInput = document.createElement('input');
+                hiddenInput.type = 'hidden';
+                hiddenInput.name = 'dropdown_submit';
+                hiddenInput.value = 'true';
+                todoForm.appendChild(hiddenInput);
+                todoForm.submit();
+            });
+        });
+    </script>
 </body>
 
 </html>
