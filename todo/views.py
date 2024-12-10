@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.hashers import make_password, check_password
 from .models import User, Todo, SubTodo
+from django.urls import reverse
 
 def register(request):
     if request.method == 'POST':
@@ -132,8 +133,7 @@ def editTask(request, id):
 
         if not dropdown_submit:
             task.save()
-
-        return render(request, 'base/edit_todo.html', {'task': task})
+            return redirect(reverse('todo_list'))
 
     return render(request, 'base/edit_todo.html', {'task': task})
 
@@ -193,8 +193,8 @@ def editSubTask(request, todo_id):
 
         if not dropdown_submit:
             tasks.save()
-
-        return render(request, 'base/edit_subtodo.html', {'tasks': tasks})
+            todo_id = tasks.todo.id
+            return redirect(reverse('subtodo_list', args=[todo_id]))
 
     return render(request, 'base/edit_subtodo.html', {'tasks': tasks})
 
@@ -204,8 +204,10 @@ def deleteSubtask(request, todo_id):
 
     if request.method == "POST":
         if request.POST.get("confirm") == "Yes":
+            todo_id = item.todo.id
             item.delete()
-            return redirect('todo_list')
-        return redirect('todo_list')
+            return redirect(reverse('subtodo_list', args=[todo_id]))
+        todo_id = item.todo.id
+        return redirect(reverse('subtodo_list', args=[todo_id]))
 
     return render(request, 'base/delete_todo.html', {'item': item})
