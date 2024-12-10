@@ -1,10 +1,3 @@
-# from django.shortcuts import render, redirect
-# from django.contrib.auth.hashers import make_password, check_password
-# from .models import User, Todo, SubTodo
-# from django.contrib import messages
-# from django.http import HttpResponse
-
-# This function handles user registration
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.hashers import make_password, check_password
@@ -65,21 +58,18 @@ def logout(request):
 
 # This function displays the to-do list for the logged-in user
 def todo_list(request):
-    # Redirect to login page if user is not logged in
     if 'user_id' not in request.session:
         return redirect('login')
 
     user_id = request.session['user_id']
     todos = Todo.objects.filter(user_id=user_id)
 
-    # Fetch the user and their name
     try:
         user = User.objects.get(id=user_id)
-        name = user.name  # Use the user object for fetching the name
+        name = user.name
     except User.DoesNotExist:
-        return redirect('login')  # Handle invalid user case
+        return redirect('login')
 
-    # Add the subtask count for each todo
     for todo in todos:
         todo.subtodo_count = SubTodo.objects.filter(todo_id=todo.id).count()
 
