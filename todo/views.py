@@ -67,6 +67,9 @@ def todo_list(request):
     for todo in todos:
         todo.subtodo_count = SubTodo.objects.filter(todo_id=todo.id).count()
 
+    if any(todo.user_id != user_id for todo in todos):
+        messages.warning(request, "You are trying to access to-do items from another user.")
+
     return render(request, 'base/todo_list.html', {'todos': todos, 'name': name})
 
 # This function handles adding a new task for the logged-in user
@@ -101,6 +104,10 @@ def addTask(request):
 def delete_task(request, id):
     item = Todo.objects.get(id=id)             
 
+    if item.user_id != request.session.get('user_id'):
+        messages.warning(request, "You cannot delete a task that doesn't belong to you.")
+        return redirect('todo_list')
+    
     if request.method == "POST":
         if request.POST.get("confirm") == "Yes":
             item.delete()  
@@ -112,6 +119,15 @@ def delete_task(request, id):
 # This function handles editing an existing task
 def editTask(request, id):
     task = Todo.objects.get(id=id)
+    # try:
+    #     task = Todo.objects.get(id=id)
+    # except Todo.DoesNotExist:
+    #     messages.error(request, f"Todo with ID {id} does not exist.")
+    #     return redirect('todo_list')
+
+    if task.user_id != request.session.get('user_id'):
+        messages.warning(request, "You cannot edit a task that doesn't belong to you.")
+        return redirect('todo_list')
 
     if request.method == 'POST':
         title = request.POST.get('title')
@@ -139,7 +155,7 @@ def editTask(request, id):
 # This function handles adding a new sub-task for the to-do
 def subtodo_list_and_add(request, todo_id):
     try:
-        todo = Todo.objects.get(id=todo_id)  # Try to fetch the Todo object
+        todo = Todo.objects.get(id=todo_id)
     except Todo.DoesNotExist:
         messages.error(request, f"Todo with ID {todo_id} does not exist.")
         return redirect('todo_list')
@@ -147,6 +163,10 @@ def subtodo_list_and_add(request, todo_id):
     subtodos = SubTodo.objects.filter(todo_id=todo_id)
     form = request.GET.get('add', False)
 
+    if todo.user_id != request.session.get('user_id'):
+        messages.warning(request, "You cannot add sub-tasks to a todo that doesn't belong to you.")
+        return redirect('todo_list')
+    
     if request.method == 'POST':
         title = request.POST.get('title')
         desc = request.POST.get('desc')
@@ -178,6 +198,10 @@ def subtodo_list_and_add(request, todo_id):
 def editSubTask(request, todo_id):
     tasks = SubTodo.objects.get(id=todo_id)
 
+    if tasks.todo.user_id != request.session.get('user_id'):
+        messages.warning(request, "You cannot edit a sub-task that doesn't belong to you.")
+        return redirect('todo_list')
+    
     if request.method == 'POST':
         title = request.POST.get('title')
         desc = request.POST.get('desc')
@@ -206,6 +230,10 @@ def editSubTask(request, todo_id):
 def deleteSubtask(request, todo_id):
     item = SubTodo.objects.get(id=todo_id)
 
+    if item.todo.user_id != request.session.get('user_id'):
+        messages.warning(request, "You cannot delete a sub-task that doesn't belong to you.")
+        return redirect('todo_list')
+    
     if request.method == "POST":
         if request.POST.get("confirm") == "Yes":
             todo_id = item.todo.id

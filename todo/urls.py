@@ -1,5 +1,7 @@
 from django.urls import path
 from . import views
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('', views.login, name='login'),
@@ -13,3 +15,5 @@ urlpatterns = [
     path('subtasks/delete/<int:todo_id>/', views.deleteSubtask, name='deleteSubtask'),
     path('subtasks/edit/<int:todo_id>/', views.editSubTask, name='sub_edit'),
 ]
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
