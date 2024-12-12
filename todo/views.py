@@ -102,7 +102,12 @@ def addTask(request):
 
 # This function handles the deletion of a specific task
 def delete_task(request, id):
-    item = Todo.objects.get(id=id)             
+    # item = Todo.objects.get(id=id)
+    try:
+        item = Todo.objects.get(id=id)
+    except Todo.DoesNotExist:
+        messages.error(request, f"Todo with ID {id} does not exist.")
+        return redirect('todo_list')
 
     if item.user_id != request.session.get('user_id'):
         messages.warning(request, "You cannot delete a task that doesn't belong to you.")
@@ -112,21 +117,22 @@ def delete_task(request, id):
         if request.POST.get("confirm") == "Yes":
             item.delete()  
             return redirect('todo_list')
-        return redirect('todo_list') 
+        return redirect('todo_list')
 
     return render(request, 'base/delete_todo.html', {'item': item})
 
 # This function handles editing an existing task
 def editTask(request, id):
-    task = Todo.objects.get(id=id)
-    # try:
-    #     task = Todo.objects.get(id=id)
-    # except Todo.DoesNotExist:
-    #     messages.error(request, f"Todo with ID {id} does not exist.")
-    #     return redirect('todo_list')
+    # task = Todo.objects.get(id=id)
+    try:
+        task = Todo.objects.get(id=id)
+    except Todo.DoesNotExist:
+        messages.error(request, f"Todo with ID {id} does not exist.")
+        return redirect('todo_list')
 
     if task.user_id != request.session.get('user_id'):
         messages.warning(request, "You cannot edit a task that doesn't belong to you.")
+        # return redirect(reverse('edit_todo', args=[task.id]))
         return redirect('todo_list')
 
     if request.method == 'POST':
@@ -228,18 +234,23 @@ def editSubTask(request, todo_id):
 
 # This function handles the deletion of a specific task
 def deleteSubtask(request, todo_id):
-    item = SubTodo.objects.get(id=todo_id)
-
-    if item.todo.user_id != request.session.get('user_id'):
-        messages.warning(request, "You cannot delete a sub-task that doesn't belong to you.")
-        return redirect('todo_list')
-    
-    if request.method == "POST":
-        if request.POST.get("confirm") == "Yes":
-            todo_id = item.todo.id
-            item.delete()
-            return redirect(reverse('subtodo_list', args=[todo_id]))
-        todo_id = item.todo.id
+    try:
+        # Retrieve the subtask using the todo_id
+        item = SubTodo.objects.get(id=todo_id)
+    except SubTodo.DoesNotExist:
+        # Handle case where subtask does not exist
+        messages.error(request, f"Subtask with ID {todo_id} does not exist.")
         return redirect(reverse('subtodo_list', args=[todo_id]))
 
+    if request.method == "POST":
+        # Handle confirmation for deletion
+        if request.POST.get("confirm") == "Yes":
+            todo_id = item.todo.id  # Get the parent Todo ID
+            item.delete()  # Delete the subtask
+            messages.success(request, "Subtask deleted successfully.")
+            return redirect(reverse('subtodo_list', args=[todo_id]))
+
+        return redirect(reverse('subtodo_list', args=[item.todo.id]))
+
+    # Render the confirmation page if the request method is GET
     return render(request, 'base/delete_todo.html', {'item': item})
