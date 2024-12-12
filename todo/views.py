@@ -138,7 +138,12 @@ def editTask(request, id):
 
 # This function handles adding a new sub-task for the to-do
 def subtodo_list_and_add(request, todo_id):
-    todo = Todo.objects.get(id=todo_id)
+    try:
+        todo = Todo.objects.get(id=todo_id)  # Try to fetch the Todo object
+    except Todo.DoesNotExist:
+        messages.error(request, f"Todo with ID {todo_id} does not exist.")
+        return redirect('todo_list')
+    
     subtodos = SubTodo.objects.filter(todo_id=todo_id)
     form = request.GET.get('add', False)
 
