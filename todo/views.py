@@ -32,7 +32,6 @@ def register(request):
 # This function handles the user login process
 @never_cache
 def login(request):
-    # Check if the user is already logged in
     if request.session.get('user_id'):
         return redirect('todo_list')
 
