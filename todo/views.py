@@ -39,16 +39,11 @@ def login(request):
         email = request.POST['email']
         password = request.POST['password']
 
-        try:
-            user = User.objects.get(email=email)
-            if check_password(password, user.password):
-                request.session['user_id'] = user.id
-                request.session['user_name'] = user.name
-                return redirect('todo_list')
-            else:
-                messages.error(request, "Incorrect password.", extra_tags="password_error")
-        except User.DoesNotExist:
-            messages.error(request, "Email is not registered.", extra_tags="email_error")
+        user = User.objects.get(email=email)
+        if check_password(password, user.password):
+            request.session['user_id'] = user.id
+            request.session['user_name'] = user.name
+            return redirect('todo_list')
 
     return render(request, 'base/login.html')
 
