@@ -4,6 +4,7 @@ from django.contrib.auth.hashers import make_password, check_password
 from .models import User, Todo, SubTodo
 from django.urls import reverse
 
+# This function handles the user register process
 def register(request):
     if request.method == 'POST':
         name = request.POST['name']
