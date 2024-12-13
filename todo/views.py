@@ -3,6 +3,7 @@ from django.contrib import messages
 from django.contrib.auth.hashers import make_password, check_password
 from .models import User, Todo, SubTodo
 from django.urls import reverse
+from django.views.decorators.cache import never_cache
 
 # This function handles the user register process
 def register(request):
@@ -28,7 +29,12 @@ def register(request):
     return render(request, 'base/register.html')
 
 # This function handles the user login process
+@never_cache
 def login(request):
+    # Check if the user is already logged in
+    if request.session.get('user_id'):
+        return redirect('todo_list')  # Redirect logged-in users to the todo list page
+
     if request.method == 'POST':
         email = request.POST['email']
         password = request.POST['password']
@@ -36,18 +42,22 @@ def login(request):
         try:
             user = User.objects.get(email=email)
             if check_password(password, user.password):
+                # Set session data for logged-in user
                 request.session['user_id'] = user.id
                 request.session['user_name'] = user.name
                 return redirect('todo_list')
             else:
+                # Display error for incorrect password
                 messages.error(request, "Incorrect password.", extra_tags="password_error")
         except User.DoesNotExist:
+            # Display error for unregistered email
             messages.error(request, "Email is not registered.", extra_tags="email_error")
 
     return render(request, 'base/login.html')
 
 # This function handles user logout
 def logout(request):
+    # Clear all session data and redirect to the login page
     request.session.flush()
     return redirect('login')
 
