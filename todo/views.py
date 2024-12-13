@@ -6,6 +6,7 @@ from django.urls import reverse
 from django.views.decorators.cache import never_cache
 
 # This function handles the user register process
+@never_cache
 def register(request):
     if request.method == 'POST':
         name = request.POST['name']
@@ -33,7 +34,7 @@ def register(request):
 def login(request):
     # Check if the user is already logged in
     if request.session.get('user_id'):
-        return redirect('todo_list')  # Redirect logged-in users to the todo list page
+        return redirect('todo_list')
 
     if request.method == 'POST':
         email = request.POST['email']
@@ -42,25 +43,22 @@ def login(request):
         try:
             user = User.objects.get(email=email)
             if check_password(password, user.password):
-                # Set session data for logged-in user
                 request.session['user_id'] = user.id
                 request.session['user_name'] = user.name
                 return redirect('todo_list')
             else:
-                # Display error for incorrect password
                 messages.error(request, "Incorrect password.", extra_tags="password_error")
         except User.DoesNotExist:
-            # Display error for unregistered email
             messages.error(request, "Email is not registered.", extra_tags="email_error")
 
     return render(request, 'base/login.html')
 
-# This function handles user logout
 def logout(request):
     request.session.flush()
     return redirect('login')
 
 # This function displays the to-do list for the logged-in user
+@never_cache
 def todo_list(request):
     if 'user_id' not in request.session:
         return redirect('login')
@@ -245,22 +243,18 @@ def editSubTask(request, todo_id):
 # This function handles the deletion of a specific task
 def deleteSubtask(request, todo_id):
     try:
-        # Retrieve the subtask using the todo_id
         item = SubTodo.objects.get(id=todo_id)
     except SubTodo.DoesNotExist:
-        # Handle case where subtask does not exist
         messages.error(request, f"Subtask with ID {todo_id} does not exist.")
         return redirect(reverse('subtodo_list', args=[todo_id]))
 
     if request.method == "POST":
-        # Handle confirmation for deletion
         if request.POST.get("confirm") == "Yes":
-            todo_id = item.todo.id  # Get the parent Todo ID
-            item.delete()  # Delete the subtask
+            todo_id = item.todo.id
+            item.delete()
             messages.success(request, "Subtask deleted successfully.")
             return redirect(reverse('subtodo_list', args=[todo_id]))
 
         return redirect(reverse('subtodo_list', args=[item.todo.id]))
 
-    # Render the confirmation page if the request method is GET
     return render(request, 'base/delete_todo.html', {'item': item})
