@@ -57,7 +57,6 @@ def login(request):
 
 # This function handles user logout
 def logout(request):
-    # Clear all session data and redirect to the login page
     request.session.flush()
     return redirect('login')
 
