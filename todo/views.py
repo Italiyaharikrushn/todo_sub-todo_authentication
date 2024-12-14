@@ -6,7 +6,11 @@ from django.urls import reverse
 from django.views.decorators.cache import never_cache
 
 # This function handles the user register process
+@never_cache
 def register(request):
+    if request.session.get('user_id'):
+        return redirect('todo_list')
+
     if request.method == 'POST':
         name = request.POST['name']
         email = request.POST['email']
@@ -240,7 +244,8 @@ def deleteSubtask(request, todo_id):
         item = SubTodo.objects.get(id=todo_id)
     except SubTodo.DoesNotExist:
         messages.error(request, f"Subtask with ID {todo_id} does not exist.")
-        return redirect(reverse('subtodo_list', args=[todo_id]))
+        return redirect('todo_list')
+        # return render(request, 'base/subtodo_list.html', {'todo_id': todo_id})
 
     if request.method == "POST":
         if request.POST.get("confirm") == "Yes":
