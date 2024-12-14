@@ -6,7 +6,6 @@ from django.urls import reverse
 from django.views.decorators.cache import never_cache
 
 # This function handles the user register process
-@never_cache
 def register(request):
     if request.method == 'POST':
         name = request.POST['name']
