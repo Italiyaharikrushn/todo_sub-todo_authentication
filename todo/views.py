@@ -47,6 +47,7 @@ def login(request):
 
     return render(request, 'base/login.html')
 
+# This function handles the user logout process
 def logout(request):
     request.session.flush()
     return redirect('login')
