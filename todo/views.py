@@ -208,12 +208,16 @@ def subtodo_list_and_add(request, todo_id):
 
 # This function handles editing an existing sub-task
 def editSubTask(request, todo_id):
-    tasks = SubTodo.objects.get(id=todo_id)
+    try:
+        tasks = SubTodo.objects.get(id=todo_id)
+    except SubTodo.DoesNotExist:
+        messages.error(request, f"Subtask with ID {todo_id} does not exist.")
+        return redirect('todo_list')
 
     if tasks.todo.user_id != request.session.get('user_id'):
         messages.warning(request, "You cannot edit a sub-task that doesn't belong to you.")
         return redirect('todo_list')
-    
+
     if request.method == 'POST':
         title = request.POST.get('title')
         desc = request.POST.get('desc')
