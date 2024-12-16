@@ -3,10 +3,10 @@ from django.contrib import messages
 from django.contrib.auth.hashers import make_password, check_password
 from .models import User, Todo, SubTodo
 from django.urls import reverse
-from django.views.decorators.cache import never_cache
+from .utils import never_cache_custom
 
 # This function handles the user register process
-@never_cache
+@never_cache_custom
 def register(request):
     if request.session.get('user_id'):
         return redirect('todo_list')
@@ -33,7 +33,7 @@ def register(request):
     return render(request, 'base/register.html')
 
 # This function handles the user login process
-@never_cache
+@never_cache_custom
 def login(request):
     if request.session.get('user_id'):
         return redirect('todo_list')
@@ -56,9 +56,10 @@ def logout(request):
     return redirect('login')
 
 # This function displays the to-do list for the logged-in user
-@never_cache
+@never_cache_custom
 def todo_list(request):
     if 'user_id' not in request.session:
+    # if request.session.get('user_id') is None:
         return redirect('login')
 
     user_id = request.session['user_id']
@@ -79,7 +80,7 @@ def todo_list(request):
     return render(request, 'base/todo_list.html', {'todos': todos, 'name': name})
 
 # This function handles adding a new task for the logged-in user
-@never_cache
+@never_cache_custom
 def addTask(request):
     if 'user_id' not in request.session:
         return redirect('login')
@@ -108,7 +109,7 @@ def addTask(request):
     return render(request, 'base/add_todo.html')
 
 # This function handles the deletion of a specific task
-@never_cache
+@never_cache_custom
 def delete_task(request, id):
     if 'user_id' not in request.session:
         return redirect('login')
@@ -133,22 +134,25 @@ def delete_task(request, id):
     return render(request, 'base/delete_todo.html', {'item': item})
 
 # This function handles editing an existing task
-@never_cache
+@never_cache_custom
 def editTask(request, id):
     if 'user_id' not in request.session:
         return redirect('login')
+    
+    user_id = request.session.get('user_id')
 
     # task = Todo.objects.get(id=id)
     try:
-        task = Todo.objects.get(id=id)
+        task = Todo.objects.filter(id=id, user_id = user_id)
     except Todo.DoesNotExist:
-        messages.error(request, f"Todo with ID {id} does not exist.")
+        messages.warning(request, "You cannot edit a task that doesn't belong to you.")
+        
         return redirect('todo_list')
 
-    if task.user_id != request.session.get('user_id'):
-        messages.warning(request, "You cannot edit a task that doesn't belong to you.")
-        # return redirect(reverse('edit_todo', args=[task.id]))
-        return redirect('todo_list')
+    # if task.user_id != request.session.get('user_id'):
+    #     messages.warning(request, "You cannot edit a task that doesn't belong to you.")
+    #     # return redirect(reverse('edit_todo', args=[task.id]))
+    #     return redirect('todo_list')
 
     if request.method == 'POST':
         title = request.POST.get('title')
@@ -174,7 +178,7 @@ def editTask(request, id):
     return render(request, 'base/edit_todo.html', {'task': task})
 
 # This function handles adding a new sub-task for the to-do
-@never_cache
+@never_cache_custom
 def subtodo_list_and_add(request, todo_id):
     if 'user_id' not in request.session:
         return redirect('login')
@@ -220,7 +224,7 @@ def subtodo_list_and_add(request, todo_id):
     return render(request, 'base/subtodo_list.html', {'subtodos': subtodos, 'todo_id': todo_id, 'title': todo.title, 'form': form,})
 
 # This function handles editing an existing sub-task
-@never_cache
+@never_cache_custom
 def editSubTask(request, todo_id):
     if 'user_id' not in request.session:
         return redirect('login')
@@ -260,7 +264,7 @@ def editSubTask(request, todo_id):
     return render(request, 'base/edit_subtodo.html', {'tasks': tasks})
 
 # This function handles the deletion of a specific task
-@never_cache
+@never_cache_custom
 def deleteSubtask(request, todo_id):
     if 'user_id' not in request.session:
         return redirect('login')
