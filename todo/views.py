@@ -79,6 +79,7 @@ def todo_list(request):
     return render(request, 'base/todo_list.html', {'todos': todos, 'name': name})
 
 # This function handles adding a new task for the logged-in user
+@never_cache
 def addTask(request):
     if 'user_id' not in request.session:
         return redirect('login')
@@ -107,7 +108,11 @@ def addTask(request):
     return render(request, 'base/add_todo.html')
 
 # This function handles the deletion of a specific task
+@never_cache
 def delete_task(request, id):
+    if 'user_id' not in request.session:
+        return redirect('login')
+
     # item = Todo.objects.get(id=id)
     try:
         item = Todo.objects.get(id=id)
@@ -128,7 +133,11 @@ def delete_task(request, id):
     return render(request, 'base/delete_todo.html', {'item': item})
 
 # This function handles editing an existing task
+@never_cache
 def editTask(request, id):
+    if 'user_id' not in request.session:
+        return redirect('login')
+
     # task = Todo.objects.get(id=id)
     try:
         task = Todo.objects.get(id=id)
@@ -165,7 +174,11 @@ def editTask(request, id):
     return render(request, 'base/edit_todo.html', {'task': task})
 
 # This function handles adding a new sub-task for the to-do
+@never_cache
 def subtodo_list_and_add(request, todo_id):
+    if 'user_id' not in request.session:
+        return redirect('login')
+
     try:
         todo = Todo.objects.get(id=todo_id)
     except Todo.DoesNotExist:
@@ -207,7 +220,11 @@ def subtodo_list_and_add(request, todo_id):
     return render(request, 'base/subtodo_list.html', {'subtodos': subtodos, 'todo_id': todo_id, 'title': todo.title, 'form': form,})
 
 # This function handles editing an existing sub-task
+@never_cache
 def editSubTask(request, todo_id):
+    if 'user_id' not in request.session:
+        return redirect('login')
+
     try:
         tasks = SubTodo.objects.get(id=todo_id)
     except SubTodo.DoesNotExist:
@@ -243,13 +260,21 @@ def editSubTask(request, todo_id):
     return render(request, 'base/edit_subtodo.html', {'tasks': tasks})
 
 # This function handles the deletion of a specific task
+@never_cache
 def deleteSubtask(request, todo_id):
+    if 'user_id' not in request.session:
+        return redirect('login')
+
     try:
         item = SubTodo.objects.get(id=todo_id)
     except SubTodo.DoesNotExist:
         messages.error(request, f"Subtask with ID {todo_id} does not exist.")
         return redirect('todo_list')
         # return render(request, 'base/subtodo_list.html', {'todo_id': todo_id})
+
+    if item.todo.user_id != request.session.get('user_id'):
+        messages.warning(request, "You cannot edit a sub-task that doesn't belong to you.")
+        return redirect('todo_list')
 
     if request.method == "POST":
         if request.POST.get("confirm") == "Yes":
