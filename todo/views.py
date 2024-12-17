@@ -3,13 +3,14 @@ from django.contrib import messages
 from django.contrib.auth.hashers import make_password, check_password
 from .models import User, Todo, SubTodo
 from django.urls import reverse
-from .utils import never_cache_custom
+from .utils import never_cache_custom, user_login_required, user
 
 # This function handles the user register process
 @never_cache_custom
+@user
 def register(request):
-    if request.session.get('user_id'):
-        return redirect('todo_list')
+    # if request.session.get('user_id'):
+    #     return redirect('todo_list')
 
     if request.method == 'POST':
         name = request.POST['name']
@@ -34,9 +35,10 @@ def register(request):
 
 # This function handles the user login process
 @never_cache_custom
+@user
 def login(request):
-    if request.session.get('user_id'):
-        return redirect('todo_list')
+    # if request.session.get('user_id'):
+    #     return redirect('todo_list')
 
     if request.method == 'POST':
         email = request.POST['email']
@@ -57,11 +59,8 @@ def logout(request):
 
 # This function displays the to-do list for the logged-in user
 @never_cache_custom
+@user_login_required
 def todo_list(request):
-    if 'user_id' not in request.session:
-    # if request.session.get('user_id') is None:
-        return redirect('login')
-
     user_id = request.session['user_id']
     todos = Todo.objects.filter(user_id=user_id)
 
@@ -81,10 +80,8 @@ def todo_list(request):
 
 # This function handles adding a new task for the logged-in user
 @never_cache_custom
+@user_login_required
 def addTask(request):
-    if 'user_id' not in request.session:
-        return redirect('login')
-
     user_id = request.session['user_id']
 
     if request.method == 'POST':
@@ -110,10 +107,8 @@ def addTask(request):
 
 # This function handles the deletion of a specific task
 @never_cache_custom
+@user_login_required
 def delete_task(request, id):
-    if 'user_id' not in request.session:
-        return redirect('login')
-
     # item = Todo.objects.get(id=id)
     try:
         item = Todo.objects.get(id=id)
@@ -135,15 +130,12 @@ def delete_task(request, id):
 
 # This function handles editing an existing task
 @never_cache_custom
+@user_login_required
 def editTask(request, id):
-    if 'user_id' not in request.session:
-        return redirect('login')
-    
     user_id = request.session.get('user_id')
 
-    # task = Todo.objects.get(id=id)
     try:
-        task = Todo.objects.filter(id=id, user_id = user_id)
+        task = Todo.objects.get(id=id, user_id = user_id)
     except Todo.DoesNotExist:
         messages.warning(request, "You cannot edit a task that doesn't belong to you.")
         
@@ -179,10 +171,8 @@ def editTask(request, id):
 
 # This function handles adding a new sub-task for the to-do
 @never_cache_custom
+@user_login_required
 def subtodo_list_and_add(request, todo_id):
-    if 'user_id' not in request.session:
-        return redirect('login')
-
     try:
         todo = Todo.objects.get(id=todo_id)
     except Todo.DoesNotExist:
@@ -225,10 +215,8 @@ def subtodo_list_and_add(request, todo_id):
 
 # This function handles editing an existing sub-task
 @never_cache_custom
+@user_login_required
 def editSubTask(request, todo_id):
-    if 'user_id' not in request.session:
-        return redirect('login')
-
     try:
         tasks = SubTodo.objects.get(id=todo_id)
     except SubTodo.DoesNotExist:
@@ -265,10 +253,8 @@ def editSubTask(request, todo_id):
 
 # This function handles the deletion of a specific task
 @never_cache_custom
+@user_login_required
 def deleteSubtask(request, todo_id):
-    if 'user_id' not in request.session:
-        return redirect('login')
-
     try:
         item = SubTodo.objects.get(id=todo_id)
     except SubTodo.DoesNotExist:
