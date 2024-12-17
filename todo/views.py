@@ -3,11 +3,11 @@ from django.contrib import messages
 from django.contrib.auth.hashers import make_password, check_password
 from .models import User, Todo, SubTodo
 from django.urls import reverse
-from .utils import never_cache_custom, user_login_required, user
+from .utils import never_cache_custom, user_login_required, user_todo
 
 # This function handles the user register process
 @never_cache_custom
-@user
+@user_todo
 def register(request):
     # if request.session.get('user_id'):
     #     return redirect('todo_list')
@@ -35,7 +35,7 @@ def register(request):
 
 # This function handles the user login process
 @never_cache_custom
-@user
+@user_todo
 def login(request):
     # if request.session.get('user_id'):
     #     return redirect('todo_list')

@@ -18,7 +18,7 @@ def user_login_required(view_func):
         return view_func(request, *args, **kwargs)
     return _wrapped_view
 
-def user(view_func):
+def user_todo(view_func):
     @wraps(view_func)
     def _wrapped_view(request, *args, **kwargs):
         if request.session.get('user_id'):
